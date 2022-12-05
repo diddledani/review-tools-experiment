@@ -1,0 +1,14 @@
+on:
+  - push
+
+jobs:
+  experiment:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - run: |
+        sudo aa-status
+        /usr/bin/docker run --rm --tty --privileged --volume $PWD:/data --workdir /data --platform linux/amd64 --env SNAPCRAFT_IMAGE_INFO='{"build_url":"https://github.com/diddledani/review-tools-experiment/actions/runs/3623212848"}' --env SNAPCRAFT_BUILD_INFO=1 --env USE_SNAPCRAFT_CHANNEL=6.x/stable diddledani/snapcraft:core20 snapcraft
+        sudo aa-status
+        sudo snap install review-tools
+        /snap/bin/review-tools.snap-review test-diddledani-review-action_0.1_amd64.snap
